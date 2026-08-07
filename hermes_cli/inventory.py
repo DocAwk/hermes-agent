@@ -296,6 +296,14 @@ def build_model_options_payload(
       endpoints do not block the picker
     - explicit refresh: probe every custom provider while busting the model
       cache so live catalogs repopulate fully
+
+    ``for_picker=True`` because every consumer of this payload is a surface a
+    human is choosing from. Without it a provider whose credential pool is
+    entirely in exhaustion cooldown (a single OpenRouter key that took a 402,
+    an Ollama Cloud key that took a 429) vanishes from the picker along with
+    its whole model list, and the user cannot select any model under it to
+    recover. Cooldowns are transient and often per-model; visibility must not
+    depend on them. See the same flag on the aux-picker path below (#66624).
     """
     refresh = bool(refresh)
     return build_models_payload(
@@ -310,6 +318,7 @@ def build_model_options_payload(
         refresh=refresh,
         probe_custom_providers=refresh,
         probe_current_custom_provider=not refresh,
+        for_picker=True,
     )
 
 

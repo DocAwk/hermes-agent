@@ -9408,6 +9408,11 @@ class HermesCLI(CLIAgentSetupMixin, CLICommandsMixin, CLIBillingMixin):
                     ctx,
                     probe_custom_providers=force_refresh,
                     probe_current_custom_provider=not force_refresh,
+                    # Human-facing picker: keep providers whose credential pool
+                    # is entirely in exhaustion cooldown visible. Otherwise a
+                    # single rate-limited / 402'd key hides the provider and
+                    # every model under it, with no way to select back in.
+                    for_picker=True,
                 )["providers"]
             except Exception:
                 providers = []

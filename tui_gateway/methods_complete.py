@@ -404,7 +404,9 @@ def _(rid, params: dict) -> dict:
         agent = session.get("agent") if session else None
         ctx = _model_picker_context(agent)
         payload = build_models_payload(
-            ctx, picker_hints=True, max_models=50,
+            # for_picker: an exhausted credential pool must not erase the
+            # provider (and its models) from a picker the user is choosing in.
+            ctx, picker_hints=True, max_models=50, for_picker=True,
         )
         provider_data = next(
             (p for p in payload["providers"] if p["slug"] == slug), None

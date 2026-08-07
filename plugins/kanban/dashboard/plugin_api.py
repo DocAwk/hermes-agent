@@ -2218,6 +2218,9 @@ def model_options():
             explicit_only=True,
             canonical_order=True,
             probe_custom_providers=False,
+            # Dashboard config screen is a picker: a provider in credential
+            # cooldown must still be listed with its models.
+            for_picker=True,
         )
         return {
             "providers": [
